@@ -1,15 +1,20 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 import configparser
 from sklearn.metrics.pairwise import pairwise_distances
 import numpy as np
 
 import kmedoids
 import csv
+import sys
 
 config = configparser.ConfigParser()
-config.read('config.ini')
+config.read(['config.ini'], encoding='utf8')
 
 cluster_number = config.getint('kmedoids', 'cluster_number')
+cluster_labels = config['kmedoids']['cluster_labels']
+cluster_labels = cluster_labels.encode("utf8").split(",")
+print(cluster_labels)
+
 only_cluster_number = config.getboolean('kmedoids', 'only_cluster_number')
 first_row_is_field_name = config.getboolean('csv', 'first_row_is_field_name')
 
@@ -86,11 +91,14 @@ for i in range(len(data)):
             for r_index in range(len(row)):
                 if int(row[r_index]) == float(row[r_index]):
                     row[r_index] = int(row[r_index])
+
             
-            print('label {0} : {1}'.format(order_label[label], row))        
+            ordered_label = order_label[label]
+            str_label = cluster_labels[ordered_label]
+            print('label {0} : {1}'.format(ordered_label, row))        
             
             if only_cluster_number == True:
-                output_list.append([order_label[label]])
+                output_list.append(str_label)
             else:
                 row.append(order_label[label])
                 #output_list.append(map(float, row))
@@ -99,7 +107,9 @@ for i in range(len(data)):
 print('')
 for i in range(len(order_label)):
     label = order_label.index(i)
-    print('label {0} count: {1}'.format(order_label[label], len(C[label])))
+    ordered_label = order_label[label]
+    str_label = cluster_labels[ordered_label]
+    print('label {0} count: {1}'.format(ordered_label, len(C[label])))
 
 #print("----------------")
 #print(output_list)

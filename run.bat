@@ -1,2 +1,2 @@
-python run-kmedoids.py
+node main.js
 pause

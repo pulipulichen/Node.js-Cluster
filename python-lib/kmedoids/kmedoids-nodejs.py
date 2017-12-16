@@ -28,12 +28,24 @@ for line in sys.stdin:
 
     D = pairwise_distances(data, metric='euclidean')
     retry=0
-    while retry < 1000:
+    max_retry=10
+    M = []
+    C = []
+    print json.dumps(kmedoids.kMedoids(D, cluster_number))
+    break
+
+    while retry < max_retry:
         try:
             M, C = kmedoids.kMedoids(D, cluster_number)
-            break
+            if M is not None and C is not None:
+                break
+            else:
+                retry=retry+1
         except:
             retry=retry+1
+
+    if retry == max_retry:
+        raise "k-medoids failed"
 
     order_labels = []
     for point_idx in range(len(M)):
@@ -52,3 +64,4 @@ for line in sys.stdin:
                 data_cluster.append(ordered_label)
 
     print json.dumps(data_cluster)
+    break

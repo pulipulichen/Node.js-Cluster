@@ -67,5 +67,13 @@ CSVUtils = {
             }
         }
         return _str;
+    },
+    get_attr_list: function (_csv_file) {
+        var _row = _csv_file[0];
+        var _attr_list = [];
+        for (var _i in _row) {
+            _attr_list.push(_i);
+        }
+        return _attr_list;
     }
 };

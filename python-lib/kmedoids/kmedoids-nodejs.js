@@ -1,8 +1,8 @@
 KMedoidsNodejs = function (_data) {
     var _result = false;
     var _done = false;
-
-    pyshell = new PythonShell('./python-lib/kmedoids/kmedoids-nodejs.py', {mode:"json"});
+    
+    var pyshell = new PythonShell('./python-lib/kmedoids/kmedoids-nodejs.py', {mode:"json"});
 
     pyshell.send(_data);
 

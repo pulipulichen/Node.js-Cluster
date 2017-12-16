@@ -13,7 +13,8 @@ for (var _file_name in _csv_files) {
     console.log("Process " + _file_name + "...");
     var _csv_file = _csv_files[_file_name];
     var _matrix = CSVUtils.convert_csv_to_matrix(_csv_file);
-    //console.log(_matrix);
+    var _attr_list = CSVUtils.get_attr_list(_csv_file);
+    console.log(_matrix);
     
     // 丟到python中
     var _option = {
@@ -24,7 +25,7 @@ for (var _file_name in _csv_files) {
     //console.log(_cluster_result);
     
     // 輸出檔案
-    var _output = ["cluster"];
+    var _output = [_attr_list.join("&")+"-" + _cluster_number +"-cluster"];
     for (var _i in _cluster_result) {
         var _cluster_number = _cluster_result[_i];
         if (typeof(_cluster_labels[_cluster_number]) !== "undefined") {

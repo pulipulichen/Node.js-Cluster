@@ -7,6 +7,7 @@ def kMedoids(D, k, tmax=100):
 
     if k > n:
         raise Exception('too many medoids')
+
     # randomly initialize an array of k medoid indices
     M = np.arange(n)
     np.random.shuffle(M)
@@ -17,6 +18,7 @@ def kMedoids(D, k, tmax=100):
 
     # initialize a dictionary to represent clusters
     C = {}
+
     for t in xrange(tmax):
         # determine clusters, i. e. arrays of data indices
         J = np.argmin(D[:,M], axis=1)
@@ -38,5 +40,6 @@ def kMedoids(D, k, tmax=100):
         for kappa in range(k):
             C[kappa] = np.where(J==kappa)[0]
 
+    raise len(M)
     # return results
     return M, C

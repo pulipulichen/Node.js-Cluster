@@ -1,4 +1,4 @@
-PythonKMedoids = function (_data) {
+KMedoidsNodejs = function (_data) {
     var _result = false;
     var _done = false;
 

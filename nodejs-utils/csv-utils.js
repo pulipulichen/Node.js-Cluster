@@ -42,10 +42,30 @@ CSVUtils = {
             var _row_array = [];
             for (var _col in _csv_file[_row]) {
                 var _cell = _csv_file[_row][_col];
+                _cell = this.parse_number(_cell);
                 _row_array.push(_cell);
             }
             _matrix.push(_row_array);
         }
         return _matrix;
+    },
+    parse_number: function (_str) {
+        if (isNaN(_str) === false && _str.trim() !== "") {
+            var _tmp;
+            eval("_tmp = " + _str);
+            _str = _tmp;
+        }
+        else {
+            var _boolean = _str.trim().toLowerCase();
+            if (_boolean === "true" 
+                    || _boolean === "false"
+                    || _boolean === "undefined"
+                    || _boolean === "null") {
+                var _tmp;
+                eval("_tmp = " + _boolean);
+                _str = _tmp;
+            }
+        }
+        return _str;
     }
 };

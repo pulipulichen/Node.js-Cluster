@@ -11,11 +11,24 @@ config.read('config.ini')
 
 cluster_number = config.getint('kmedoids', 'cluster_number')
 only_cluster_number = config.getboolean('kmedoids', 'only_cluster_number')
+first_row_is_field_name = config.getboolean('csv', 'first_row_is_field_name')
+
+skiprows = 0
+if first_row_is_field_name == True:
+    skiprows = 1
 
 # 3 points in dataset
-original_data = np.loadtxt('input/input.csv', delimiter=',', ndmin=2, dtype = np.float64)
+input_file_path = 'input/input.csv';
+original_data = np.loadtxt(input_file_path, delimiter=',', ndmin=2, dtype = np.float64, skiprows=skiprows)
+first_line = []
+if first_row_is_field_name == True:
+    f = np.loadtxt(input_file_path, delimiter=',', ndmin=2, dtype = np.str)
+    #print(f[0])
+    first_line = f[0].tolist()
+    first_line.append("cluster")
+    #print(first_line)
 
-data = np.loadtxt('input/input.csv', delimiter=',', ndmin=2, dtype = np.float64)
+data = np.loadtxt(input_file_path, delimiter=',', ndmin=2, dtype = np.float64, skiprows=skiprows)
 attr_list = []
 
 for c in range(len(data[0])):
@@ -35,7 +48,13 @@ D = pairwise_distances(data, metric='euclidean')
 
 
 # split into 2 clusters
-M, C = kmedoids.kMedoids(D, cluster_number)
+retry=0
+while retry < 1000:
+    try:
+        M, C = kmedoids.kMedoids(D, cluster_number)
+        break
+    except:
+        retry=retry+1
 
 print('medoids:')
 order_label = []
@@ -51,7 +70,15 @@ print(order_label)
 
 print('')
 print('clustering result:')
+
 output_list = []
+if first_row_is_field_name == True:
+    #print(first_line)
+    if only_cluster_number == True:
+        output_list.append(["cluster"])
+    else:
+        output_list.append(first_line)
+
 for i in range(len(data)):
     for label in C:
         if i in C[label]:
@@ -73,6 +100,9 @@ print('')
 for i in range(len(order_label)):
     label = order_label.index(i)
     print('label {0} count: {1}'.format(order_label[label], len(C[label])))
+
+#print("----------------")
+#print(output_list)
 
 # 輸出吧
 with open('output/output.csv', 'wb') as myfile:

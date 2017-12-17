@@ -92,7 +92,8 @@ def kmedoids(data, k):
 	best_res = dict(medoids)
 	iter_count = 0
 
-	while True:
+	stable_count = 0;
+	while (stable_count < 10):
 		for m in medoids:
 			for item in medoids[m]:
 				# NOTE: both m and item are idx!
@@ -118,7 +119,9 @@ def kmedoids(data, k):
 
 		if best_choice == medoids_idx:
 			# Done the clustering
-			break
+			#break
+                        stable_count = stable_count + 1
+                        continue
 
 		# Update the cost and medoids
 		if current_cost < pre_cost:

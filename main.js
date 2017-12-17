@@ -1,6 +1,6 @@
 require("./require-packages.js");
 require("./nodejs-utils/csv-utils.js");
-require("./python-lib/pycluster/python-pam.js");
+require("./python-lib/shenxudeu-K_Medoids/python-kmedoids.js");
 
 cfg = ini.parseSync('./config.ini');
 //console.log(cfg);
@@ -14,10 +14,10 @@ for (var _file_name in _csv_files) {
     var _csv_file = _csv_files[_file_name];
     var _matrix = CSVUtils.convert_csv_to_matrix(_csv_file);
     var _attr_list = CSVUtils.get_attr_list(_csv_file);
-    console.log(_matrix);
+    //console.log(_matrix);
     
     // 丟到python中
-    var _cluster_result = PythonPAM(_matrix, _cluster_number);
+    var _cluster_result = PythonKMedoids(_matrix, _cluster_number);
     console.log(_cluster_result);
     break;
     

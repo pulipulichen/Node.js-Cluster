@@ -1,4 +1,6 @@
-PythonPAM = function (_matrix, _k) {
+PythonKMedoids = function (_matrix, _k) {
+    
+    // 正規化
     
     var _attr_max = {};
     var _attr_min = {};
@@ -29,7 +31,7 @@ PythonPAM = function (_matrix, _k) {
     
     var _data = {
         matrix: _matrix,
-        k: 3
+        k: _k
     };
     
     // --------------------
@@ -38,7 +40,7 @@ PythonPAM = function (_matrix, _k) {
     var _done = false;
     
     
-    var pyshell = new PythonShell('./python-lib/pycluster/python-pam.py', {mode:"json"});
+    var pyshell = new PythonShell('./python-lib/shenxudeu-K_Medoids/python-kmedoids.py', {mode:"json"});
 
     pyshell.send(_data);
 
@@ -61,7 +63,6 @@ PythonPAM = function (_matrix, _k) {
     // ------------------------
     // 後置處理
     
-    
     var _array_avg = function (_array) {
         var _sum = 0;
         for (var _i in _array) {
@@ -70,20 +71,27 @@ PythonPAM = function (_matrix, _k) {
         return _sum / _array.length;
     };
     
+    var _uniq = function (a) {
+        return a.sort().filter(function(item, pos, ary) {
+            return !pos || item != ary[pos - 1];
+        })
+    };
+    
     // 先取出中心點列表
+    var _result_medoids = _uniq(_result);
     var _medoids_list = [];
-    var _medoids_key = [];
-    for (var _m in _result) {
+    //var _medoids_key = [];
+    for (var _i in _result_medoids) {
+        var _m = _result_medoids[_i];
         var _m_array = _matrix[parseInt(_m, 10)];
         var _m_avg = _array_avg(_m_array);
-        _medoids_key.push(Math.round(_m_avg*100)/100);
+        //_medoids_key.push(Math.round(_m_avg*100)/100);
         _medoids_list.push({
             m: _m,
             avg: _m_avg
         });
         //console.log(_m_array);
     }
-    return _medoids_key.sort().join(",");
     
     var _sorted = _medoids_list.slice().sort(function(a,b){return a.avg-b.avg});
     var _ranks = _medoids_list.slice().map(function(v){ return _sorted.indexOf(v)+1; });
@@ -91,11 +99,13 @@ PythonPAM = function (_matrix, _k) {
     var _medoids_dict = {};
     for (var _i = 0; _i < _medoids_list.length; _i++) {
         var _rank = _ranks[_i];
-        var _m = _medoids_list[_i].m;
+        var _m = _medoids_list[_i].m + "";
         _medoids_dict[_m] = _rank;
     }
     
-    _result = _medoids_dict;
+    for (var _i in _result) {
+        _result[_i] = _medoids_dict[_result[_i]+""];
+    }
 
     return _result;
 };

@@ -2,10 +2,7 @@ import numpy as np
 import pyclust
 
 
-#d1 = np.random.uniform(low=0, high=2, size=(10,2))
-#d2 = np.random.uniform(low=0, high=4, size=(10,2))
-#d = np.vstack((d1,d2))
-d = [
+d1 = np.array([
     [20,18],
     [20,18],
     [20,18],
@@ -14,7 +11,20 @@ d = [
     [1,1],
     [1,1],
     [1,1],
-]
+    [20,18],
+    [20,18],
+    [20,18],
+    [16,18],
+    [1,1],
+    [1,1],
+    [1,1],
+    [1,1]
+])
+print(d1)
+d1 = np.random.uniform(low=0, high=4, size=(10,2))
+print(d1)
+d2 = np.random.uniform(low=0, high=4, size=(10,2))
+d = np.vstack((d1))
 
 #print(d.shape)
 d = np.vstack(d)
@@ -36,7 +46,6 @@ rng = np.random.RandomState(1234)
 print(pyclust._kmedoids._kmedoids_run(d, n_clusters=2, distance='euclidean', max_iter=20, tol=0.001, rng=rng))
 
 kmd = pyclust.KMedoids(n_clusters=2)
-
 kmd.fit(d)
 
 print("Centers: ", kmd.centers_)

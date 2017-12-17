@@ -1,5 +1,9 @@
-PythonKMedoids = function (_matrix, _k) {
+PythonKMedoids = function (_matrix, _k, _max_iteration) {
     var _do_normalization = true;
+    
+    if (typeof(_max_iteration) === "undefined") {
+        _max_iteration = 50;
+    }
     
     // 正規化
     if (_do_normalization) {
@@ -34,7 +38,7 @@ PythonKMedoids = function (_matrix, _k) {
     var _data = {
         matrix: _matrix,
         k: _k,
-        max_iter: 50
+        max_iter: _max_iteration
     };
     
     //console.log(JSON.stringify(_matrix));
@@ -76,7 +80,7 @@ PythonKMedoids = function (_matrix, _k) {
     // ------------------------
     // 後置處理
     
-    console.log(_result);
+    //console.log(_result);
     //return _result;
     
     var _array_avg = function (_array) {

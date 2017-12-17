@@ -33,7 +33,7 @@ for (var _file_name in _csv_files) {
     }
     
     var _output_path = cfg.csv.output_folder_path + "/" + _file_name 
-            + "_" + _cluster_number + "cluster.csv";
+            + "_" + _cluster_number + "-cluster.csv";
     fs.writeFileSync(_output_path, _output.join("\n"));
 }   // for (var _file_name in _csv_files) {
 

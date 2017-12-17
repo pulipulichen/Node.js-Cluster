@@ -18,22 +18,22 @@ for (var _file_name in _csv_files) {
     
     // 丟到python中
     var _cluster_result = PythonKMedoids(_matrix, _cluster_number);
-    console.log(_cluster_result);
-    break;
+    //console.log(_cluster_result);
+    //break;
     
     // 輸出檔案
     var _output = [_attr_list.join("&")+"-" + _cluster_number +"-cluster"];
     for (var _i in _cluster_result) {
-        var _cluster_number = _cluster_result[_i];
-        if (typeof(_cluster_labels[_cluster_number]) !== "undefined") {
-            _cluster_number = _cluster_labels[_cluster_number];
+        var _cluster_label = _cluster_result[_i];
+        if (typeof(_cluster_labels[_cluster_label]) !== "undefined") {
+            _cluster_label = _cluster_labels[_cluster_label];
         }
-        _output.push(_cluster_number);
+        _output.push(_cluster_label);
     }
     
     var _output_path = cfg.csv.output_folder_path + "/" + _file_name + "_cluster.csv";
     fs.writeFileSync(_output_path, _output.join("\n"));
-}
+}   // for (var _file_name in _csv_files) {
 
 console.log("\n=================\n")
 console.log("Finish")

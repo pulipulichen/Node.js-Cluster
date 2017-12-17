@@ -43,7 +43,7 @@ def _get_cost(X, centers_id, dist_func):
         costs[i] = np.sum(dist_mat[mem_id,i])
     return members, costs, np.sum(costs), dist_mat
 
-def _kmedoids_run(X, n_clusters, dist_func, max_iter=1000, tol=0.001, verbose=True):
+def _kmedoids_run(X, n_clusters, dist_func, max_iter=10, tol=0.001, verbose=True):
     '''run algorithm return centers, members, and etc.'''
     # Get initial centers
     n_samples, n_features = X.shape
@@ -53,11 +53,10 @@ def _kmedoids_run(X, n_clusters, dist_func, max_iter=1000, tol=0.001, verbose=Tr
     centers = init_ids
     members, costs, tot_cost, dist_mat = _get_cost(X, init_ids,dist_func)
     cc,SWAPED = 0, True
-    iteration_max = n_samples
-    #iteration_max = 10
-    iteration_count = 0
-    while (iteration_count < iteration_max):
-        iteration_count = iteration_count + 1
+    max_iter = max_iter * len(X) * n_clusters
+    #print "AAA", max_max_iter * len(X)iter
+
+    while True:
         SWAPED = False
         for i in range(n_samples):
             if not i in centers:
@@ -69,8 +68,9 @@ def _kmedoids_run(X, n_clusters, dist_func, max_iter=1000, tol=0.001, verbose=Tr
                         members, costs, tot_cost, dist_mat = members_, costs_, tot_cost_, dist_mat_
                         centers = centers_
                         SWAPED = True
+                        cc += 1
                         if verbose:
-                            print 'Change centers to ', centers
+                            print 'Change centers to ', centers," [", cc,"/",max_iter,"]"
         if cc > max_iter:
             if verbose:
                 print 'End Searching by reaching maximum iteration', max_iter
@@ -107,7 +107,7 @@ class KMedoids(object):
 
         predict(X): predict cluster id given a test dataset.
     '''
-    def __init__(self, n_clusters, dist_func=_get_distance, max_iter=10000, tol=0.0001):
+    def __init__(self, n_clusters, dist_func=_get_distance, max_iter=10, tol=0.0001):
         self.n_clusters = n_clusters
         self.dist_func = dist_func
         self.max_iter = max_iter

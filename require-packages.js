@@ -22,4 +22,4 @@ csv_parse = require('csv-parse/lib/sync');
 PythonShell = require('python-shell');
 
 // npm install --save deasync
-deasync = require('deasync');
+//deasync = require('deasync');

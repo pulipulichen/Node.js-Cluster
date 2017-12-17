@@ -1,5 +1,5 @@
 PythonKMedoids = function (_matrix, _k) {
-    var _do_normalization = false;
+    var _do_normalization = true;
     
     // 正規化
     if (_do_normalization) {
@@ -33,10 +33,11 @@ PythonKMedoids = function (_matrix, _k) {
     
     var _data = {
         matrix: _matrix,
-        k: _k
+        k: _k,
+        max_iter: 50
     };
     
-    //console.log(_matrix);
+    //console.log(JSON.stringify(_matrix));
     
     // --------------------
     
@@ -58,7 +59,8 @@ PythonKMedoids = function (_matrix, _k) {
         // end the input stream and allow the process to exit
         pyshell.end(function (err) {
             if (err){
-                throw err;
+                //throw err;
+                _result = err;
             };
 
             //console.log('finished');
@@ -74,7 +76,7 @@ PythonKMedoids = function (_matrix, _k) {
     // ------------------------
     // 後置處理
     
-    //console.log(_result);
+    console.log(_result);
     //return _result;
     
     var _array_avg = function (_array) {
@@ -86,7 +88,8 @@ PythonKMedoids = function (_matrix, _k) {
     };
     
     var _uniq = function (a) {
-        return a.sort().filter(function(item, pos, ary) {
+        var b = JSON.parse(JSON.stringify(a));
+        return b.sort().filter(function(item, pos, ary) {
             return !pos || item != ary[pos - 1];
         });
     };
@@ -118,7 +121,10 @@ PythonKMedoids = function (_matrix, _k) {
     }
     
     for (var _i in _result) {
-        _result[_i] = _medoids_dict[_result[_i]+""];
+        
+        var _label = _medoids_dict[_result[_i]+""];
+        //console.log([_label, _result[_i]]);
+        _result[_i] = _label;
     }
 
     return _result;

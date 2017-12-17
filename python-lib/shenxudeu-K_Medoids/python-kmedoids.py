@@ -13,7 +13,8 @@ for line in sys.stdin:
     X = input["matrix"]
     X = np.array(X)
     k = input["k"]
-    model = KMedoids(n_clusters=k, dist_func=example_distance_func)
+    max_iter = input["max_iter"]
+    model = KMedoids(n_clusters=k, dist_func=example_distance_func, max_iter=max_iter)
     centers,members = model.fit(X, plotit=False, verbose=False)
     members = members.tolist()
 

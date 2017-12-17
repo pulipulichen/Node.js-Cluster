@@ -53,7 +53,7 @@ def _kmedoids_run(X, n_clusters, dist_func, max_iter=10, tol=0.001, verbose=True
     centers = init_ids
     members, costs, tot_cost, dist_mat = _get_cost(X, init_ids,dist_func)
     cc,SWAPED = 0, True
-    max_iter = max_iter * len(X) * n_clusters
+    #max_iter = max_iter * len(X) * n_clusters
     #print "AAA", max_max_iter * len(X)iter
 
     while True:
@@ -63,14 +63,18 @@ def _kmedoids_run(X, n_clusters, dist_func, max_iter=10, tol=0.001, verbose=True
                 for j in range(len(centers)):
                     centers_ = deepcopy(centers)
                     centers_[j] = i
+                    #print "get cost",j
                     members_, costs_, tot_cost_, dist_mat_ = _get_cost(X, centers_,dist_func)
                     if tot_cost_-tot_cost < tol:
                         members, costs, tot_cost, dist_mat = members_, costs_, tot_cost_, dist_mat_
                         centers = centers_
                         SWAPED = True
                         cc += 1
+                        item_list = []
+                        for c in centers:
+                            item_list.append(X[c])
                         if verbose:
-                            print 'Change centers to ', centers," [", cc,"/",max_iter,"]"
+                            print 'Change centers to ', centers,"/",item_list," [", cc,"/",max_iter,"]"
         if cc > max_iter:
             if verbose:
                 print 'End Searching by reaching maximum iteration', max_iter
@@ -113,7 +117,7 @@ class KMedoids(object):
         self.max_iter = max_iter
         self.tol = tol
 
-    def fit(self, X,plotit=True, verbose=True):
+    def fit(self, X,plotit=False, verbose=True):
         centers,members, costs,tot_cost, dist_mat = _kmedoids_run(
                 X,self.n_clusters, self.dist_func, max_iter=self.max_iter, tol=self.tol,verbose=verbose)
         if plotit:

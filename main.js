@@ -22,7 +22,8 @@ for (var _file_name in _csv_files) {
     //break;
     
     // 輸出檔案
-    var _output = [_attr_list.join("&")+"-" + _cluster_number +"-cluster"];
+    var _output = [_attr_list.join("&") 
+                + "-" + _cluster_number +"-cluster"];
     for (var _i in _cluster_result) {
         var _cluster_label = _cluster_result[_i];
         if (typeof(_cluster_labels[_cluster_label]) !== "undefined") {
@@ -31,7 +32,8 @@ for (var _file_name in _csv_files) {
         _output.push(_cluster_label);
     }
     
-    var _output_path = cfg.csv.output_folder_path + "/" + _file_name + "_cluster.csv";
+    var _output_path = cfg.csv.output_folder_path + "/" + _file_name 
+            + "_" + _cluster_number + "cluster.csv";
     fs.writeFileSync(_output_path, _output.join("\n"));
 }   // for (var _file_name in _csv_files) {
 

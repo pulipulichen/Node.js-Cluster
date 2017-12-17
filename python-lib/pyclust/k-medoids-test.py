@@ -2,11 +2,22 @@ import numpy as np
 import pyclust
 
 
-d1 = np.random.uniform(low=0, high=2, size=(10,2))
-d2 = np.random.uniform(low=0, high=4, size=(10,2))
-d = np.vstack((d1,d2))
+#d1 = np.random.uniform(low=0, high=2, size=(10,2))
+#d2 = np.random.uniform(low=0, high=4, size=(10,2))
+#d = np.vstack((d1,d2))
+d = [
+    [20,18],
+    [20,18],
+    [20,18],
+    [16,18],
+    [1,1],
+    [1,1],
+    [1,1],
+    [1,1],
+]
 
-print(d.shape)
+#print(d.shape)
+d = np.vstack(d)
 cent = pyclust._kmeans._kmeans_init(d, 2)
 #d2c = scipy.spatial.distance.cdist(d, cent, metric='euclidean')
 

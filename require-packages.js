@@ -22,4 +22,7 @@ csv_parse = require('csv-parse/lib/sync');
 PythonShell = require('python-shell');
 
 // npm install --save deasync
-//deasync = require('deasync');
+deasync = require('deasync');
+
+// npm install chartjs-node jsdom canvas chartjs
+ChartjsNode = require('chartjs-node');

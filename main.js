@@ -11,7 +11,6 @@ var _cluster_number = parseInt(cfg.kmedoids.cluster_number, 10);
 var _cluster_labels = cfg.kmedoids.cluster_labels.split(",");
 
 for (var _file_name in _csv_files) {
-    break;
     
     console.log("Process " + _file_name + "...");
     var _csv_file = _csv_files[_file_name];
@@ -40,7 +39,6 @@ for (var _file_name in _csv_files) {
     fs.writeFileSync(_output_path, _output.join("\n"));
 }   // for (var _file_name in _csv_files) {
 
-ChartJSUtils.demo();
 
 console.log("\n=================\n")
 console.log("Finish")

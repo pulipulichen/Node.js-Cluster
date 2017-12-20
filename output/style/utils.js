@@ -31,7 +31,8 @@ createBarChart = function (_title, _data) {
                         barPercentage: 1.0,
                         gridLines: {
                             stacked: true,
-                            offsetGridLines: true
+                            offsetGridLines: false,
+                            display:false,
                         }
                     }],
                 yAxes: [{

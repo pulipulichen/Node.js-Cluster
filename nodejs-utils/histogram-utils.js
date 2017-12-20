@@ -36,9 +36,11 @@ HistogramUtils = {
                 var _data_array = _group_list[_group];
                 var _freq_list = this.count_frequency(_data_array, _labels);
                 var _freq_array = [];
-                for (var _f in _freq_list) {
-                    _freq_array.push(_freq_list[_f]);
+                for (var _i in _labels) {
+                    var _label = _labels[_i];
+                    _freq_array.push(_freq_list[_label]);
                 }
+                _freq_array.push(0);
                 _data_set.push({
                     label: _group,
                     backgroundColor: this.get_color(_color_index),
@@ -49,7 +51,7 @@ HistogramUtils = {
             
             _output_data_set.push({
                 attr: _attr,
-                labels: JSON.stringify(this.round_to_precision(_labels, 1)),
+                labels: JSON.stringify(this.round_to_precision(_labels, 0)),
                 data_set: JSON.stringify(_data_set)
             });
         }
@@ -183,19 +185,23 @@ HistogramUtils = {
         _data.sort();
         //console.log(_data);
         //console.log(_range_labels);
+        var _last_range = _range_labels[(_range_labels.length-2)];
         for (var _i in _data) {
-            var _value = _data[_i];
-            var _range = _max;
+            var _value = this.parse_number(_data[_i]);
+            var _range = _last_range;
             for (var _r = 0; _r < _range_labels.length - 1; _r++) {
-                if (_value >= _range_labels[_r] && _value < _range_labels[(_r+1)]) {
-                    _range = _range_labels[_r];
+                var _range_start = _range_labels[_r];
+                var _range_end = _range_labels[(_r+1)];
+                
+                if (_value >= _range_start && _value < _range_end) {
+                    _range = _range_start;
                     break;
                 }
             }
             //console.log([_value, _range]);
             _range_labels_count[_range]++;
         }
-        //console.log(_range_labels_count);
+        console.log(_range_labels_count);
         
         return _range_labels_count;
     },
@@ -208,7 +214,11 @@ HistogramUtils = {
         return _color_list[_index];
     },
     parse_number: function (_str) {
-        if (isNaN(_str) === false && _str.trim() !== "") {
+        //console.log([_str, typeof(_str)]);
+        if (typeof(_str) === "number") {
+            return _str;
+        }
+        else if (isNaN(_str) === false && (typeof(_str.trim) === "function" && _str.trim() !== "")) {
             var _tmp;
             eval("_tmp = " + _str);
             _str = _tmp;

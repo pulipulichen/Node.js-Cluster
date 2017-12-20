@@ -3,6 +3,7 @@ require("./nodejs-utils/csv-utils.js");
 require("./python-lib/shenxudeu-K_Medoids/python-kmedoids.js");
 require("./nodejs-utils/template-utils.js");
 require("./nodejs-utils/cache-utils.js");
+require("./nodejs-utils/histogram-utils.js");
 
 cfg = ini.parseSync('./config.ini');
 //console.log(cfg);
@@ -42,6 +43,7 @@ for (var _file_name in _csv_files) {
         var _cluster_label = _cluster_result[_i];
         if (typeof(_cluster_labels[_cluster_label]) !== "undefined") {
             _cluster_label = _cluster_labels[_cluster_label];
+            _cluster_result[_i] = _cluster_label;
         }
         _output.push(_cluster_label);
     }
@@ -52,6 +54,9 @@ for (var _file_name in _csv_files) {
     
     // -----------------------------
     
+    // 先來合併資料
+    var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result)
+    console.log(_histogram_data_list);
     
 }   // for (var _file_name in _csv_files) {
 

@@ -23,3 +23,6 @@ PythonShell = require('python-shell');
 
 // npm install --save deasync
 deasync = require('deasync');
+
+// npm install --save mustache
+Mustache = require('mustache');

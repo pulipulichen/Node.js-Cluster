@@ -1,0 +1,27 @@
+
+<!doctype html>
+<html>
+
+<head>
+    <title>{{ title }}</title>
+    <script src="Chart.js"></script>
+    <script src="utils.js"></script>
+</head>
+
+<body>
+    <script>
+createBarChart({
+    labels: ["0","","","3"],
+    datasets: [
+        {
+                    backgroundColor: "red",
+                data: [1, -2, 3, 4]
+            }, {
+                backgroundColor: "blue",
+                data: [1, 2, 3, 4]
+            }]
+    });
+    </script>
+</body>
+
+</html>

@@ -22,7 +22,7 @@
     <button id="randomizeData">Randomize Data</button>
     <script>
         var barChartData = {
-            labels: ["January", "February", "March", "April", "May", "June", "July"],
+            labels: [1,2,3,4,5,6,7],
             datasets: [{
                 label: 'Dataset 1',
                 backgroundColor: window.chartColors.red,
@@ -61,6 +61,7 @@
                         text:"Chart.js Bar Chart - Stacked"
                     },
                     tooltips: {
+                        enabled: false,
                         mode: 'index',
                         intersect: false
                     },
@@ -68,13 +69,24 @@
                     scales: {
                         xAxes: [{
                             stacked: true,
+                            categoryPercentage: 1.0,
+                            barPercentage: 1.0,
+                            gridLines: {
+                                display:false,
+                                offsetGridLines: false,
+                                drawTicks: false,
+                            }
                         }],
                         yAxes: [{
-                            stacked: true
+                            stacked: true,
                         }]
                     }
-                }
+                },
+                ticks: {
+    beginAtZero: true
+  }
             });
+            
         };
 
         document.getElementById('randomizeData').addEventListener('click', function() {

@@ -56,8 +56,13 @@ for (var _file_name in _csv_files) {
     
     // 先來合併資料
     var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result)
-    console.log(_histogram_data_list);
-    
+    //console.log(_histogram_data_list);
+    var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", {
+        attr_data_set: _histogram_data_list
+    });
+    var _chart_output_path = cfg.csv.output_folder_path + "/" + _file_name 
+            + "_" + _cluster_number + "-cluster.html";
+    fs.writeFileSync(_chart_output_path, _chart_template);
 }   // for (var _file_name in _csv_files) {
 
 

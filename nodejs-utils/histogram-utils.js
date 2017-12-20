@@ -2,8 +2,12 @@ HistogramUtils = {
     convert_to_frequency: function (_attr_list, _csv_file, _cluster_result) {
         var _histogram_data_list = this.histogram_data_list(_attr_list, _csv_file, _cluster_result);
         
+        var _output_data_set = [];
         for (var _attr in _histogram_data_list) {
             var _histogram_data = _histogram_data_list[_attr];
+            
+            // ----------------------------------------
+            
             var _data_array = [];
             for (var _row in _histogram_data) {
                 var _value = _histogram_data[_row]["value"];
@@ -13,9 +17,44 @@ HistogramUtils = {
             }
             //console.log(_data_array);
             var _labels = this.analyze_range_labels(_data_array);
+            
+            // --------------------------------
+            var _group_list = {};
+            for (var _row in _histogram_data) {
+                var _value = _histogram_data[_row]["value"];
+                var _group = _histogram_data[_row]["cluster"];
+                
+                if (typeof(_group_list[_group]) === "undefined") {
+                    _group_list[_group] = [];
+                }
+                _group_list[_group].push(_value);
+            }
+            
+            var _data_set = [];
+            var _color_index = 0;
+            for (var _group in _group_list) {
+                var _data_array = _group_list[_group];
+                var _freq_list = this.count_frequency(_data_array, _labels);
+                var _freq_array = [];
+                for (var _f in _freq_list) {
+                    _freq_array.push(_freq_list[_f]);
+                }
+                _data_set.push({
+                    label: _group,
+                    backgroundColor: this.get_color(_color_index),
+                    data: _freq_array
+                });
+                _color_index++;
+            }
+            
+            _output_data_set.push({
+                attr: _attr,
+                labels: JSON.stringify(this.round_to_precision(_labels, 1)),
+                data_set: JSON.stringify(_data_set)
+            });
         }
         
-        return _labels;
+        return _output_data_set;
     },
     histogram_data_list: function (_attr_list, _csv_file, _cluster_result) {
         var _histogram_data_list = {};
@@ -36,31 +75,139 @@ HistogramUtils = {
     },
     analyze_range_labels: function (_data) {
         // 最基本的做法，就是切十份然後計算其頻率
-        return this.split_range_labels(_data, 10);
+        var _split_units = 10;
+        var _last_split_units = _split_units;
+        var _max_split_units = _split_units + 5;
+        var _min_split_units = _split_units - 5;
+        var _best_split_units = null;
+        var _direction_plus = true;
+        var _last_entropy = null;
+        
+        
+        var _last_entropy = this.split_range_labels(_data, _split_units).entropy;
+        var _next_entropy = this.split_range_labels(_data, (_split_units+1) ).entropy;
+        //console.log(["last next", _last_entropy, _next_entropy]);
+        if (_last_entropy < _next_entropy) {
+            //_last_entropy = _next_entropy;
+            _split_units = _split_units++;
+        }
+        else {
+            _direction_plus = false;
+            _split_units--;
+        }
+        
+        while (true) {
+            var _range_labels_data = this.split_range_labels(_data, _split_units);
+            var _entropy = _range_labels_data.entropy;
+            //console.log([_split_units, _entropy, _range_labels_data.labels]);
+            if (_last_entropy >= _entropy) {
+                _best_split_units = _last_split_units;
+                break;
+            }
+            
+            _last_split_units = _split_units;
+            if (_direction_plus === true) {
+                _split_units++;
+                if (_split_units === _max_split_units) {
+                    _best_split_units = _last_split_units;
+                    break;
+                }
+            }
+            else {
+                _split_units--;
+                if (_split_units === _min_split_units) {
+                    _best_split_units = _last_split_units;
+                    break;
+                }
+            }
+        }
+        
+        var _output = this.split_range_labels(_data, _best_split_units);
+        //console.log(_output);
+        //console.log("ok");
+        return _output.labels;
     },
     split_range_labels: function (_data, _split_units) {
         var _max = Math.max.apply(null, _data);
         var _min = Math.min.apply(null, _data);
-        
         if (_max - _min < _split_units) {
             _split_units = _max - _min;
         }
         
+        _split_units--;
         
         var _span = (_max - _min) / _split_units;
         //console.log([_max, _min, _split_units, _span]);
         
         var _range_labels = [];
-        for (var _i = 0; _i < _split_units - 1; _i++) {
-            _range_labels.push(_min + (_i * _span));
+        for (var _i = 0; _i < _split_units; _i++) {
+            var _label = _min + (_i * _span);
+            _range_labels.push(_label);
         }
         _range_labels.push(_max);
         //console.log(_range_labels)
         
-        return _range_labels;
+        // ------------------
+        // 計算這個範圍以內的所有次數
+        var _range_labels_count = this.count_frequency(_data, _range_labels);
+        //console.log(_range_labels_count);
         
+        // ----------------
+        // 然後來計算 entropy
+        var _entropy= 0;
+        for (var _range in _range_labels_count) {
+            var _freq = _range_labels_count[_range];
+            if (_freq === 0) {
+                continue;
+            }
+            var _prop = _freq / _data.length;
+            var _pp = _prop * Math.log(_prop);
+            _entropy = _entropy + _pp;
+        }
+        _entropy = _entropy * -1;
+        var _output = {
+            entropy: _entropy,
+            labels: _range_labels
+        };
+        
+        return _output;
     },
-     parse_number: function (_str) {
+    count_frequency: function (_data, _range_labels) {
+        var _max = Math.max.apply(null, _data);
+        
+        var _range_labels_count = {};
+        for (var _i = 0; _i < _range_labels.length; _i++) {
+            _range_labels_count[_range_labels[_i]] = 0;
+        }
+        
+        _data.sort();
+        //console.log(_data);
+        //console.log(_range_labels);
+        for (var _i in _data) {
+            var _value = _data[_i];
+            var _range = _max;
+            for (var _r = 0; _r < _range_labels.length - 1; _r++) {
+                if (_value >= _range_labels[_r] && _value < _range_labels[(_r+1)]) {
+                    _range = _range_labels[_r];
+                    break;
+                }
+            }
+            //console.log([_value, _range]);
+            _range_labels_count[_range]++;
+        }
+        //console.log(_range_labels_count);
+        
+        return _range_labels_count;
+    },
+    // https://github.com/google/palette.js/tree/master
+    color_list: ['#5DA5DA', '#FAA43A', '#60BD68', '#F17CB0',
+                '#B2912F', '#B276B2', '#DECF3F', '#F15854', '#4D4D4D'],
+    get_color: function (_index) {
+        var _color_list = this.color_list;
+        _index = (_index % _color_list.length);
+        return _color_list[_index];
+    },
+    parse_number: function (_str) {
         if (isNaN(_str) === false && _str.trim() !== "") {
             var _tmp;
             eval("_tmp = " + _str);
@@ -78,5 +225,17 @@ HistogramUtils = {
             }
         }
         return _str;
+    },
+    round_to_precision ($x, $p) {
+        if (typeof($x) === "object") {
+            for (var _i in $x) {
+                $x[_i] = this.round_to_precision($x[_i], $p);
+            }
+            return $x;
+        }
+        
+        $x = $x * Math.pow(10, $p);
+        $x = Math.round($x);
+        return $x / Math.pow(10, $p);
     }
 };

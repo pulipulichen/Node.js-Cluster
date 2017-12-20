@@ -10,7 +10,12 @@
 
 <body>
     <script>
-createBarChart("{{ attr }}", {{ data_json }});
+{{ #attr_data_set }}
+createBarChart("{{ attr }}", {
+    labels: {{{ labels }}},
+    datasets: {{{ data_set }}}
+});
+{{ /attr_data_set }}
     </script>
 </body>
 

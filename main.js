@@ -1,7 +1,8 @@
 require("./require-packages.js");
 require("./nodejs-utils/csv-utils.js");
 require("./python-lib/shenxudeu-K_Medoids/python-kmedoids.js");
-require("./nodejs-utils/chartjs-utils.js");
+require("./nodejs-utils/template-utils.js");
+require("./nodejs-utils/cache-utils.js");
 
 cfg = ini.parseSync('./config.ini');
 //console.log(cfg);
@@ -9,6 +10,12 @@ cfg = ini.parseSync('./config.ini');
 var _csv_files = CSVUtils.get_input_files(cfg.csv.input_folder_path);
 var _cluster_number = parseInt(cfg.kmedoids.cluster_number, 10);
 var _cluster_labels = cfg.kmedoids.cluster_labels.split(",");
+
+var _file_name_list = [];
+for (var _file_name in _csv_files) {
+    _file_name_list.push(_file_name);
+}
+var _cache_key_prefix = _file_name_list.join(",");
 
 for (var _file_name in _csv_files) {
     
@@ -18,8 +25,13 @@ for (var _file_name in _csv_files) {
     var _attr_list = CSVUtils.get_attr_list(_csv_file);
     //console.log(_matrix);
     
+    var _cluster_result = CacheUtils.get(_cache_key_prefix + "_cluster_result");
+    
     // 丟到python中
-    var _cluster_result = PythonKMedoids(_matrix, _cluster_number);
+    if ( _cluster_result === null ) {
+        _cluster_result = PythonKMedoids(_matrix, _cluster_number);
+        CacheUtils.set(_cache_key_prefix + "_cluster_result", _cluster_result);
+    }
     //console.log(_cluster_result);
     //break;
     
@@ -37,6 +49,10 @@ for (var _file_name in _csv_files) {
     var _output_path = cfg.csv.output_folder_path + "/" + _file_name 
             + "_" + _cluster_number + "-cluster.csv";
     fs.writeFileSync(_output_path, _output.join("\n"));
+    
+    // -----------------------------
+    
+    
 }   // for (var _file_name in _csv_files) {
 
 

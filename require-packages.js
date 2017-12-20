@@ -26,3 +26,6 @@ deasync = require('deasync');
 
 // npm install --save mustache
 Mustache = require('mustache');
+
+// npm install --save node-file-cache
+node_file_cache = require('node-file-cache');

@@ -1,0 +1,19 @@
+{
+  "index": [
+    {
+      "key": "input-example_cluster_result",
+      "val": [
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        1,
+        0
+      ],
+      "life": 1513842448893,
+      "tags": []
+    }
+  ]
+}

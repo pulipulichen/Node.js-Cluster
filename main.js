@@ -12,12 +12,6 @@ var _csv_files = CSVUtils.get_input_files(cfg.csv.input_folder_path);
 var _cluster_number = parseInt(cfg.kmedoids.cluster_number, 10);
 var _cluster_labels = cfg.kmedoids.cluster_labels.split(",");
 
-var _file_name_list = [];
-for (var _file_name in _csv_files) {
-    _file_name_list.push(_file_name);
-}
-var _cache_key_prefix = _file_name_list.join(",");
-
 for (var _file_name in _csv_files) {
     
     console.log("Process " + _file_name + "...");
@@ -26,6 +20,7 @@ for (var _file_name in _csv_files) {
     var _attr_list = CSVUtils.get_attr_list(_csv_file);
     //console.log(_matrix);
     
+    var _cache_key_prefix = _file_name;
     var _cluster_result = CacheUtils.get(_cache_key_prefix + "_cluster_result");
     
     // 丟到python中
@@ -58,6 +53,7 @@ for (var _file_name in _csv_files) {
     var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result)
     //console.log(_histogram_data_list);
     var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", {
+        width: cfg.chart.width,
         attr_data_set: _histogram_data_list
     });
     var _chart_output_path = cfg.csv.output_folder_path + "/" + _file_name 

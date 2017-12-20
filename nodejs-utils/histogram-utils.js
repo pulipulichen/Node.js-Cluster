@@ -201,7 +201,7 @@ HistogramUtils = {
             //console.log([_value, _range]);
             _range_labels_count[_range]++;
         }
-        console.log(_range_labels_count);
+        //console.log(_range_labels_count);
         
         return _range_labels_count;
     },

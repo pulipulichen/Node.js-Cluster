@@ -68,6 +68,7 @@ HistogramUtils = {
                 data_set: JSON.stringify(_data_set)
             };
             
+            //console.log(["title display", this.parse_number(cfg.chart.title_display), _attr]);
             if (this.parse_number(cfg.chart.title_display) === true) {
                 _output_data_set_item["attr"] = _attr;
             }

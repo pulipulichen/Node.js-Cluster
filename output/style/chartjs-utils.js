@@ -15,6 +15,10 @@ createBarChart = function (_data, _option) {
     var _width = _get_option("width", 400);
     var _height = _get_option("height", 250);
     
+    if (_title === undefined) {
+        _height = _height - 30;
+    }
+    
     // 決定最高值跟step
     var _mix_group = [];
     for (var _group in _data["datasets"]) {
@@ -72,12 +76,18 @@ createBarChart = function (_data, _option) {
     // -------------------------
     // 判斷是否要使用legend
     var _legend_display = false;
+    var _legend_width = null;
     for (var _group in _data["datasets"]) {
         if (typeof(_data["datasets"][_group]["label"]) === "string" 
                 && _data["datasets"][_group]["label"].trim() !== "") {
             _legend_display = true;
+            _legend_width = _data["datasets"][_group]["label"].length;
             break;
         }
+    }
+    
+    if (_legend_display === true) {
+        _width = _width + _legend_width * 30 + 40;
     }
     
     // -------------------

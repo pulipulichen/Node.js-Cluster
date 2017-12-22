@@ -57,11 +57,18 @@ for (var _file_name in _csv_files) {
     // 先來合併資料
     var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result,_cluster_labels);
     //console.log(_histogram_data_list);
-    var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", {
+    var _data = {
         width: cfg.chart.width,
         height: cfg.chart.height,
         attr_data_set: _histogram_data_list
-    });
+    };
+    //console.log(_histogram_data_list);
+    //console.log([_histogram_data_list["attr"], typeof(_histogram_data_list["attr"])]);
+    //if (typeof(_histogram_data_list["attr"]) !== "undefined") {
+    //    _data["title"] = _histogram_data_list.attr;
+    //}
+    //console.log(_data);
+    var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", _data);
     var _chart_output_path = cfg.csv.output_folder_path + "/" + _file_name 
             + "_" + _cluster_number + "-cluster.html";
     fs.writeFileSync(_chart_output_path, _chart_template);

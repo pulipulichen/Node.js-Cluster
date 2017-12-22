@@ -33,6 +33,8 @@ PythonKMedoids = function (_matrix, _k, _max_iteration) {
         }
     }
     
+    //console.log(_matrix);
+    
     // -----------------------
     
     var _data = {
@@ -93,9 +95,14 @@ PythonKMedoids = function (_matrix, _k, _max_iteration) {
     
     var _uniq = function (a) {
         var b = JSON.parse(JSON.stringify(a));
-        return b.sort().filter(function(item, pos, ary) {
-            return !pos || item != ary[pos - 1];
-        });
+        try {
+            return b.sort().filter(function(item, pos, ary) {
+                return !pos || item !== ary[pos - 1];
+            });
+        }
+        catch (e) {
+            console.log(a);
+        }
     };
     
     // 先取出中心點列表

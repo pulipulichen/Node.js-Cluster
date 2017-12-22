@@ -57,7 +57,7 @@ HistogramUtils = {
             
             var _output_data_set_item = {
                 //attr: _attr,
-                labels: JSON.stringify(this.round_to_precision(_labels, 0)),
+                labels: JSON.stringify(this.round_labels(_labels)),
                 data_set: JSON.stringify(_data_set)
             };
             
@@ -69,6 +69,30 @@ HistogramUtils = {
         }
         
         return _output_data_set;
+    },
+    round_labels: function (_labels) {
+        var _round = 0;
+        while (true) {
+            var _range_labels_clone = JSON.parse(JSON.stringify(_labels));
+            _range_labels_clone = this.round_to_precision(_range_labels_clone, _round);
+            
+            var _match = false;
+            for (var _i = 0; _i < _range_labels_clone.length -1; _i++) {
+                if (_range_labels_clone[_i] === _range_labels_clone[(_i+1)]) {
+                    _match = true;
+                    break;
+                }
+            }
+            
+            if (_match === false) {
+                break;
+            }
+            else {
+                _round++;
+            }
+        }
+        _labels = this.round_to_precision(_labels, _round);
+        return _labels;
     },
     histogram_data_list: function (_attr_list, _csv_file, _cluster_result) {
         var _histogram_data_list = {};
@@ -92,7 +116,7 @@ HistogramUtils = {
         var _split_units = 10;
         var _last_split_units = _split_units;
         var _max_split_units = _split_units + 5;
-        var _min_split_units = _split_units - 5;
+        var _min_split_units = _split_units - 3;
         var _best_split_units = null;
         var _direction_plus = true;
         var _last_entropy = null;
@@ -137,13 +161,14 @@ HistogramUtils = {
         }
         
         var _output = this.split_range_labels(_data, _best_split_units);
-        //console.log(_output);
-        //console.log("ok");
+        console.log(_output);
+        console.log("ok");
         return _output.labels;
     },
     split_range_labels: function (_data, _split_units) {
         var _max = Math.max.apply(null, _data);
         var _min = Math.min.apply(null, _data);
+        
         if (_max - _min < _split_units) {
             _split_units = _max - _min;
         }
@@ -158,8 +183,41 @@ HistogramUtils = {
             var _label = _min + (_i * _span);
             _range_labels.push(_label);
         }
-        _range_labels.push(_max);
+        
+        if (_range_labels[_range_labels.length-1] < _max) {
+            _range_labels.push(_max);
+        }
+        else {
+            var _label = _min + ((_split_units+1) * _span);
+            _range_labels.push(_label);
+        }
         //console.log(_range_labels)
+        
+        // ------------------------
+        // 將標籤四捨五入
+        /*
+        var _round = 0;
+        while (true) {
+            var _range_labels_clone = JSON.parse(JSON.stringify(_range_labels));
+            _range_labels_clone = this.round_to_precision(_range_labels_clone, _round);
+            
+            var _match = false;
+            for (var _i = 0; _i < _range_labels_clone.length -1; _i++) {
+                if (_range_labels_clone[_i] === _range_labels_clone[(_i+1)]) {
+                    _match = true;
+                    break;
+                }
+            }
+            
+            if (_match === false) {
+                break;
+            }
+            else {
+                _round++;
+            }
+        }
+        _range_labels = this.round_to_precision(_range_labels, _round);
+        */
         
         // ------------------
         // 計算這個範圍以內的所有次數

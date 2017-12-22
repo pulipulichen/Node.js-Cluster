@@ -21,7 +21,10 @@ for (var _file_name in _csv_files) {
     //console.log(_matrix);
     
     var _cache_key_prefix = _file_name;
-    var _cluster_result = CacheUtils.get(_cache_key_prefix + "_cluster_result");
+    var _cluster_result = null;
+    if (cfg.cache.enable === "true") {
+        _cluster_result = CacheUtils.get(_cache_key_prefix + "_cluster_result");
+    }
     
     // 丟到python中
     if ( _cluster_result === null ) {

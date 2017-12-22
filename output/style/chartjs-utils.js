@@ -66,7 +66,7 @@ createBarChart = function (_data, _option) {
     
     var _steps = 2;
     var _step_size = _first_ceil((_max - _min) / _steps);
-    var _max_value = _min + (_step_size * _steps);
+    var _max_value = _min + (_step_size * (_steps+1));
     //console.log([_step_size, _max_value, _min, _max]);
     
     // -------------------------
@@ -162,6 +162,44 @@ createBarChart = function (_data, _option) {
                             stepSize: _step_size,
                         }
                     }]
+            },
+            animation: {
+                duration: 1,
+                onComplete: function () {
+                    var chartInstance = this.chart,
+                        ctx = chartInstance.ctx;
+                    ctx.font = Chart.helpers.fontString(Chart.defaults.global.defaultFontSize, Chart.defaults.global.defaultFontStyle, Chart.defaults.global.defaultFontFamily);
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'bottom';
+                    ctx.fillStyle = "black";  //<======= here
+
+                    var _last_i = null;
+                    var _bar_sum = [];
+                    this.data.datasets.forEach(function (dataset, i) {
+                        var meta = chartInstance.controller.getDatasetMeta(i);
+                        meta.data.forEach(function (bar, index) {
+                            if (index >= meta.data.length - 2) {
+                                return;
+                            }
+                            
+                            var data = dataset.data[index];                            
+                            //ctx.fillText(data, bar._model.x, bar._model.y - 5);
+                            if (typeof(_bar_sum[index]) === "undefined") {
+                                _bar_sum[index] = 0;
+                            }
+                            _bar_sum[index] += data;
+                        });
+                        _last_i = i;
+                    });
+                    
+                    var _last_meta = chartInstance.controller.getDatasetMeta(_last_i);
+                    _last_meta.data.forEach(function (bar, index) {
+                        if (index >= _last_meta.data.length - 2) {
+                            return;
+                        }
+                        ctx.fillText(_bar_sum[index], bar._model.x, bar._model.y - 5);
+                    });
+                }
             }
         }
     });

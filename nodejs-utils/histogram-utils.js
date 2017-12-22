@@ -56,13 +56,13 @@ HistogramUtils = {
             }
             
             var _output_data_set_item = {
-                attr: _attr,
+                //attr: _attr,
                 labels: JSON.stringify(this.round_to_precision(_labels, 0)),
                 data_set: JSON.stringify(_data_set)
             };
             
-            if (this.parse_number(cfg.chart.title_display) === false) {
-                _output_data_set_item["attr"] = "";
+            if (this.parse_number(cfg.chart.title_display) === true) {
+                _output_data_set_item["attr"] = _attr;
             }
             
             _output_data_set.push(_output_data_set_item);

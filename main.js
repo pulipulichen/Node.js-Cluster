@@ -54,6 +54,7 @@ for (var _file_name in _csv_files) {
     //console.log(_histogram_data_list);
     var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", {
         width: cfg.chart.width,
+        height: cfg.chart.height,
         attr_data_set: _histogram_data_list
     });
     var _chart_output_path = cfg.csv.output_folder_path + "/" + _file_name 

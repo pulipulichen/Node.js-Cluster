@@ -1,6 +1,19 @@
 barChartId = 0;
-createBarChart = function (_title, _data) {
+createBarChart = function (_data, _option) {
     //console.log(_data["datasets"]);
+    
+    var _get_option = function (_key, _default_value) {
+        if (typeof(_option[_key]) !== "undefined") {
+            return _option[_key];
+        }
+        else if (typeof(_default_value) !== "undefined") {
+            return _default_value;
+        }
+    };
+    
+    var _title = _get_option("title");
+    var _width = _get_option("width", 400);
+    var _height = _get_option("height", 250);
     
     // 決定最高值跟step
     var _mix_group = [];
@@ -93,10 +106,21 @@ createBarChart = function (_title, _data) {
     barChartId++;
     var canvas = document.getElementById(_id);
     if (canvas === null) {
+        var _div = document.createElement("div");
+        _div.style.width = _width + "px";
+        _div.style.height = _height + "px";
+        document.body.appendChild(_div);
+        
         canvas = document.createElement("canvas");
         canvas.id = _id;
-        document.body.appendChild(canvas);
+        canvas.width = _width;
+        canvas.height = _height;
+        
+        _div.appendChild(canvas);
     }
+    
+    // ---------------------------
+    
     var chart = canvas.getContext('2d');
     var chartObject = new Chart(chart, {
         type: 'bar',

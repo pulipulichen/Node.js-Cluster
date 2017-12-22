@@ -9,12 +9,22 @@
     <link rel="stylesheet" href="style/style.css" />
 </head>
 
-<body style="width: {{ width }}px;">
+<body>
     <script>
 {{ #attr_data_set }}
-createBarChart("{{ attr }}", {
+createBarChart({
     labels: {{{ labels }}},
     datasets: {{{ data_set }}}
+}, {
+    {{ #attr }}
+    title: "{{ attr }}", 
+    {{ /attr }}
+    {{ #width }}
+    width: {{ width }},
+    {{ /width }}
+    {{ #height }}
+    height: {{ height }},
+    {{ /height }}
 });
 {{ /attr_data_set }}
     </script>

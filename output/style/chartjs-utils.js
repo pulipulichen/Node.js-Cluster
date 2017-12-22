@@ -80,6 +80,14 @@ createBarChart = function (_title, _data) {
         }
     } 
     
+    // ---------------------
+    var _title_display = true;
+    
+    if (_title === undefined 
+            || (typeof(_title) === "string" && _title.trim() === "")) {
+        _title_display = false;
+    }
+    
     // -----------------
     var _id = "barChartId" + barChartId;
     barChartId++;
@@ -96,7 +104,7 @@ createBarChart = function (_title, _data) {
         maintainAspectRatio: false,
         options: {
             title: {
-                display: true,
+                display: _title_display,
                 text: _title
             },
             legend: {

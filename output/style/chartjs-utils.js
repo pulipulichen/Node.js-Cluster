@@ -56,6 +56,30 @@ createBarChart = function (_title, _data) {
     var _max_value = _min + (_step_size * _steps);
     //console.log([_step_size, _max_value, _min, _max]);
     
+    // -------------------------
+    // 判斷是否要使用legend
+    var _legend_display = false;
+    for (var _group in _data["datasets"]) {
+        if (typeof(_data["datasets"][_group]["label"]) === "string" 
+                && _data["datasets"][_group]["label"].trim() !== "") {
+            _legend_display = true;
+            break;
+        }
+    }
+    
+    // -------------------
+    // 加上次數統計
+    
+    if (_legend_display === true) {
+        for (var _group in _data["datasets"]) {
+            var _sum = 0;
+            for (var _i in _data["datasets"][_group]["data"]) {
+                _sum += parseInt(_data["datasets"][_group]["data"][_i], 10);
+            }
+            _data["datasets"][_group]["label"] += ": " + _sum;
+        }
+    } 
+    
     // -----------------
     var _id = "barChartId" + barChartId;
     barChartId++;
@@ -76,7 +100,7 @@ createBarChart = function (_title, _data) {
                 text: _title
             },
             legend: {
-                //display: false,
+                display: _legend_display,
                 position: "right",
                 labels: {
                     usePointStyle: true

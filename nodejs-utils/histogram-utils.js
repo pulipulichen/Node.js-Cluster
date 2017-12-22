@@ -41,11 +41,17 @@ HistogramUtils = {
                     _freq_array.push(_freq_list[_label]);
                 }
                 _freq_array.push(0);
-                _data_set.push({
-                    label: _group,
+                
+                var _data_set_item = {
                     backgroundColor: this.get_color(_color_index),
                     data: _freq_array
-                });
+                };
+                
+                if (this.parse_number(cfg.chart.legend_display) === true) {
+                    _data_set_item["label"] = _group;
+                }
+                
+                _data_set.push(_data_set_item);
                 _color_index++;
             }
             

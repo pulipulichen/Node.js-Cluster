@@ -1,9 +1,11 @@
 HistogramUtils = {
-    convert_to_frequency: function (_attr_list, _csv_file, _cluster_result) {
+    convert_to_frequency: function (_attr_list, _csv_file, _cluster_result, _cluster_lables) {
+        //console.log(_attr_list);
         var _histogram_data_list = this.histogram_data_list(_attr_list, _csv_file, _cluster_result);
-        
+        //console.log(_histogram_data_list);
         var _output_data_set = [];
-        for (var _attr in _histogram_data_list) {
+        for (var _a in _attr_list) {
+            var _attr = _attr_list[_a];
             var _histogram_data = _histogram_data_list[_attr];
             
             // ----------------------------------------
@@ -17,6 +19,7 @@ HistogramUtils = {
             }
             //console.log(_data_array);
             var _labels = this.analyze_range_labels(_data_array);
+            //console.log(_labels);
             
             // --------------------------------
             var _group_list = {};
@@ -32,9 +35,13 @@ HistogramUtils = {
             
             var _data_set = [];
             var _color_index = 0;
-            for (var _group in _group_list) {
+            for (var _i in _cluster_lables) {
+                var _group = _cluster_lables[_i];
+                //console.log(_group);
                 var _data_array = _group_list[_group];
+                //console.log(_data_array);
                 var _freq_list = this.count_frequency(_data_array, _labels);
+                //console.log(_freq_list);
                 var _freq_array = [];
                 for (var _i in _labels) {
                     var _label = _labels[_i];
@@ -161,17 +168,17 @@ HistogramUtils = {
         }
         
         var _output = this.split_range_labels(_data, _best_split_units);
-        console.log(_output);
-        console.log("ok");
+        //console.log(_output);
+        //console.log("ok");
         return _output.labels;
     },
     split_range_labels: function (_data, _split_units) {
         var _max = Math.max.apply(null, _data);
         var _min = Math.min.apply(null, _data);
         
-        if (_max - _min < _split_units) {
-            _split_units = _max - _min;
-        }
+        //if (_max - _min < _split_units) {
+        //    _split_units = _max - _min;
+        //}
         
         _split_units--;
         

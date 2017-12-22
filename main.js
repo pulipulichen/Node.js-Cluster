@@ -29,7 +29,9 @@ for (var _file_name in _csv_files) {
     // 丟到python中
     if ( _cluster_result === null ) {
         _cluster_result = PythonKMedoids(_matrix, _cluster_number);
-        CacheUtils.set(_cache_key_prefix + "_cluster_result", _cluster_result);
+        if (cfg.cache.enable === "true") {
+            CacheUtils.set(_cache_key_prefix + "_cluster_result", _cluster_result);
+        }
     }
     //console.log(_cluster_result);
     //break;
@@ -53,7 +55,7 @@ for (var _file_name in _csv_files) {
     // -----------------------------
     
     // 先來合併資料
-    var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result)
+    var _histogram_data_list = HistogramUtils.convert_to_frequency(_attr_list, _csv_file, _cluster_result,_cluster_labels);
     //console.log(_histogram_data_list);
     var _chart_template = TemplateUtils.render("chartjs-barchart/barchart", {
         width: cfg.chart.width,

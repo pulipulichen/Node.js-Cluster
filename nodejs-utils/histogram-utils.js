@@ -109,7 +109,13 @@ HistogramUtils = {
             var _histogram_data = [];
             for (var _row in _csv_file) {
                 var _value = _csv_file[_row][_attr];
-                var _cluster = _cluster_result[_row];
+                var _cluster;
+                if (Array.isArray(_cluster_result) === true) {
+                    _cluster = _cluster_result[_row];
+                }
+                else {
+                    _cluster = _cluster_result[_attr][_row];
+                }
                 _histogram_data.push({
                     value: _value,
                     cluster: _cluster

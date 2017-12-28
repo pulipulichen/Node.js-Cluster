@@ -19,6 +19,8 @@ csv_parse = require('csv-parse/lib/sync');
 // npm install --save python-shell
 // pip install numpy
 // pip install scipy
+// pip install IPython
+// pip install matplotlib
 PythonShell = require('python-shell');
 
 // npm install --save deasync

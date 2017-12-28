@@ -5,6 +5,8 @@ PythonKMedoids = function (_matrix, _k, _max_iteration) {
         _max_iteration = 50;
     }
     
+    //console.log(_matrix);
+    
     // 正規化
     if (_do_normalization) {
         var _attr_max = {};
@@ -33,7 +35,7 @@ PythonKMedoids = function (_matrix, _k, _max_iteration) {
         }
     }
     
-    //console.log(_matrix);
+    console.log(_matrix);
     
     // -----------------------
     
@@ -137,6 +139,8 @@ PythonKMedoids = function (_matrix, _k, _max_iteration) {
         //console.log([_label, _result[_i]]);
         _result[_i] = _label;
     }
+    
+    console.log(_result);
 
     return _result;
 };
